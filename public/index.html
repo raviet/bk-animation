@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animation BK Émerainville</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 1.5rem 1rem 3rem;
+      color: #1a1a1a;
+    }
+    .wrap { width: 100%; max-width: 480px; }
+
+    .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
+    .logo-icon {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: #D62300; display: flex; align-items: center;
+      justify-content: center; font-size: 15px; color: white; font-weight: 600;
+      flex-shrink: 0;
+    }
+    .logo h1 { font-size: 18px; font-weight: 600; color: #1a1a1a; }
+    .logo p { font-size: 13px; color: #666; margin-top: 2px; }
+
+    .section-title {
+      font-size: 11px; font-weight: 600; color: #888;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px;
+    }
+
+    .day-tabs { display: flex; gap: 8px; margin-bottom: 1.5rem; }
+    .day-tab {
+      flex: 1; padding: 11px; border: 1px solid #ddd;
+      border-radius: 10px; background: white; color: #666;
+      font-size: 14px; cursor: pointer; text-align: center;
+      transition: all 0.15s; font-family: inherit;
+    }
+    .day-tab.active { border-color: #D62300; color: #D62300; background: #fff5f5; font-weight: 600; }
+
+    .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem; }
+    .slot {
+      padding: 13px; border: 1px solid #e5e5e5;
+      border-radius: 10px; background: white; cursor: pointer; transition: all 0.15s;
+    }
+    .slot:hover:not(.full):not(.selected) { border-color: #ccc; background: #fafafa; }
+    .slot.selected { border-color: #D62300; background: #fff5f5; }
+    .slot.full { opacity: 0.5; cursor: not-allowed; }
+    .slot-time { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+    .slot-badge {
+      display: inline-block; font-size: 11px;
+      padding: 2px 8px; border-radius: 99px; margin-top: 6px;
+    }
+    .badge-ok { background: #eaf3de; color: #3B6D11; }
+    .badge-full { background: #fcebeb; color: #A32D2D; }
+    .badge-sel { background: #fff0ee; color: #D62300; }
+
+    .form-card {
+      background: white; border: 1px solid #e5e5e5;
+      border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
+    }
+    .form-row { margin-bottom: 12px; }
+    .form-row:last-child { margin-bottom: 0; }
+    .form-label { font-size: 13px; color: #666; margin-bottom: 5px; display: block; }
+    .form-input {
+      width: 100%; padding: 10px 12px; border: 1px solid #ddd;
+      border-radius: 8px; font-size: 15px; background: white;
+      color: #1a1a1a; font-family: inherit; transition: border-color 0.15s;
+    }
+    .form-input:focus { outline: none; border-color: #D62300; box-shadow: 0 0 0 3px rgba(214,35,0,0.08); }
+
+    .btn-confirm {
+      width: 100%; padding: 14px; background: #D62300; color: white;
+      border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s; font-family: inherit;
+    }
+    .btn-confirm:hover { opacity: 0.88; }
+    .btn-confirm:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .loader { text-align: center; padding: 3rem 1rem; color: #888; font-size: 14px; }
+    .spinner {
+      width: 28px; height: 28px; border: 2px solid #eee;
+      border-top-color: #D62300; border-radius: 50%;
+      animation: spin 0.7s linear infinite; margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-msg {
+      background: #fcebeb; color: #A32D2D; border-radius: 10px;
+      padding: 12px 16px; font-size: 13px; margin-bottom: 1rem;
+    }
+
+    .success { text-align: center; padding: 2rem 0.5rem; }
+    .success-icon {
+      width: 68px; height: 68px; border-radius: 50%; background: #eaf3de;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem; font-size: 30px;
+    }
+    .success h2 { font-size: 21px; font-weight: 600; margin-bottom: 6px; }
+    .success p { font-size: 14px; color: #666; line-height: 1.6; }
+
+    .recap {
+      background: #f5f5f5; border-radius: 10px;
+      padding: 1rem 1.25rem; margin: 1.25rem 0; text-align: left;
+    }
+    .recap-row { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
+    .recap-label { color: #666; }
+    .recap-value { font-weight: 600; color: #1a1a1a; }
+
+    .btn-back {
+      width: 100%; padding: 11px; background: white; border: 1px solid #ddd;
+      border-radius: 10px; font-size: 14px; color: #666; cursor: pointer;
+      margin-top: 10px; font-family: inherit; transition: background 0.15s;
+    }
+    .btn-back:hover { background: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+      <div class="logo-icon">BK</div>
+      <div>
+        <h1>Réservez votre animation</h1>
+        <p>Samedi &amp; dimanche après-midi</p>
+      </div>
+    </div>
+    <div id="app">
+      <div class="loader"><div class="spinner"></div>Connexion en cours...</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+    import { getFirestore, doc, setDoc, onSnapshot, runTransaction } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBG377KlyGO543RYR5YZQY9necmjrUmEVE",
+      authDomain: "bkanimationemerainville.firebaseapp.com",
+      projectId: "bkanimationemerainville",
+      storageBucket: "bkanimationemerainville.firebasestorage.app",
+      messagingSenderId: "312167238846",
+      appId: "1:312167238846:web:b79492e2092bb21866a2ef"
+    };
+
+    const PLACES = 4;
+    const HORAIRES = [
+      "13h00 – 13h30","13h30 – 14h00","14h00 – 14h30","14h30 – 15h00",
+      "15h00 – 15h30","15h30 – 16h00","16h00 – 16h30","16h30 – 17h00"
+    ];
+    const JOURS = ["Samedi","Dimanche"];
+
+    const fbApp = initializeApp(firebaseConfig);
+    const db = getFirestore(fbApp);
+
+    let state = { jour: "Samedi", selected: null, prenom: "", nom: "", confirmed: false, slots: {} };
+    let unsubscribe = null;
+
+    function slotId(jour, idx) { return `${jour}-${idx}`; }
+
+    function ecouter() {
+      if (unsubscribe) unsubscribe();
+      const ref = doc(db, "semaine", "courante");
+      unsubscribe = onSnapshot(ref, snap => {
+        state.slots = snap.exists() ? (snap.data() || {}) : {};
+        render();
+      }, err => {
+        document.getElementById("app").innerHTML =
+          `<div class="error-msg">Erreur de connexion : ${err.message}</div>`;
+      });
+    }
+
+    async function confirmer() {
+      const id = slotId(state.jour, state.selected);
+      const ref = doc(db, "semaine", "courante");
+      try {
+        await runTransaction(db, async tx => {
+          const snap = await tx.get(ref);
+          const data = snap.exists() ? snap.data() : {};
+          const resa = data[id] || [];
+          if (resa.length >= PLACES) throw new Error("Ce créneau vient d'être complet.");
+          resa.push({ prenom: state.prenom, nom: state.nom, ts: Date.now() });
+          tx.set(ref, { ...data, [id]: resa }, { merge: true });
+        });
+        state.confirmed = true;
+        render();
+      } catch(e) {
+        alert("Impossible de réserver : " + e.message);
+      }
+    }
+
+    function render() {
+      const el = document.getElementById("app");
+
+      if (state.confirmed) {
+        el.innerHTML = `
+          <div class="success">
+            <div class="success-icon">✓</div>
+            <h2>Réservation confirmée !</h2>
+            <p>À tout à l'heure chez<br>Burger King Émerainville</p>
+            <div class="recap">
+              <div class="recap-row"><span class="recap-label">Prénom</span><span class="recap-value">${state.prenom}</span></div>
+              <div class="recap-row"><span class="recap-label">Nom</span><span class="recap-value">${state.nom}</span></div>
+              <div class="recap-row"><span class="recap-label">Jour</span><span class="recap-value">${state.jour}</span></div>
+              <div class="recap-row"><span class="recap-label">Créneau</span><span class="recap-value">${HORAIRES[state.selected]}</span></div>
+            </div>
+            <button class="btn-back" id="btn-reset">Nouvelle réservation</button>
+          </div>`;
+        document.getElementById("btn-reset").onclick = () => {
+          state = { ...state, selected: null, prenom: "", nom: "", confirmed: false };
+          render();
+        };
+        return;
+      }
+
+      const slotsHTML = HORAIRES.map((h, i) => {
+        const id = slotId(state.jour, i);
+        const nb = (state.slots[id] || []).length;
+        const full = nb >= PLACES;
+        const sel = state.selected === i;
+        const dispo = PLACES - nb;
+        const cls = "slot" + (full ? " full" : "") + (sel ? " selected" : "");
+        const badge = full
+          ? `<span class="slot-badge badge-full">Complet</span>`
+          : sel ? `<span class="slot-badge badge-sel">Sélectionné</span>`
+          : `<span class="slot-badge badge-ok">${dispo} place${dispo > 1 ? "s" : ""}</span>`;
+        return `<div class="${cls}" data-idx="${i}" data-full="${full}">${
+          `<div class="slot-time">${h}</div>${badge}`}</div>`;
+      }).join("");
+
+      const showForm = state.selected !== null;
+      const canConfirm = showForm && state.prenom.trim() && state.nom.trim();
+
+      el.innerHTML = `
+        <p class="section-title">Choisissez un jour</p>
+        <div class="day-tabs">
+          ${JOURS.map(j => `<div class="day-tab${state.jour===j?' active':''}" data-jour="${j}">${j}</div>`).join("")}
+        </div>
+        <p class="section-title">Créneaux disponibles</p>
+        <div class="slots">${slotsHTML}</div>
+        ${showForm ? `
+        <div class="form-card">
+          <p class="section-title" style="margin-bottom:12px">Vos informations</p>
+          <div class="form-row">
+            <label class="form-label">Prénom</label>
+            <input class="form-input" id="inp-prenom" type="text" placeholder="Marie" value="${state.prenom}" autocomplete="given-name" />
+          </div>
+          <div class="form-row">
+            <label class="form-label">Nom</label>
+            <input class="form-input" id="inp-nom" type="text" placeholder="Dupont" value="${state.nom}" autocomplete="family-name" />
+          </div>
+        </div>
+        <button class="btn-confirm" id="btn-confirm" ${canConfirm ? "" : "disabled"}>Confirmer la réservation</button>
+        ` : ""}
+      `;
+
+      el.querySelectorAll(".day-tab").forEach(t => {
+        t.onclick = () => { state.jour = t.dataset.jour; state.selected = null; render(); };
+      });
+      el.querySelectorAll(".slot").forEach(s => {
+        s.onclick = () => {
+          if (s.dataset.full === "true") return;
+          state.selected = parseInt(s.dataset.idx);
+          render();
+        };
+      });
+      if (showForm) {
+        document.getElementById("inp-prenom").oninput = e => { state.prenom = e.target.value; render(); };
+        document.getElementById("inp-nom").oninput = e => { state.nom = e.target.value; render(); };
+        if (canConfirm) document.getElementById("btn-confirm").onclick = confirmer;
+      }
+    }
+
+    ecouter();
+  </script>
+</body>
+</html>
