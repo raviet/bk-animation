@@ -267,8 +267,14 @@
         };
       });
       if (showForm) {
-        document.getElementById("inp-prenom").oninput = e => { state.prenom = e.target.value; render(); };
-        document.getElementById("inp-nom").oninput = e => { state.nom = e.target.value; render(); };
+        const updateBtn = () => {
+          const ok = state.prenom.trim() && state.nom.trim();
+          const btn = document.getElementById("btn-confirm");
+          btn.disabled = !ok;
+          btn.onclick = ok ? confirmer : null;
+        };
+        document.getElementById("inp-prenom").oninput = e => { state.prenom = e.target.value; updateBtn(); };
+        document.getElementById("inp-nom").oninput = e => { state.nom = e.target.value; updateBtn(); };
         if (canConfirm) document.getElementById("btn-confirm").onclick = confirmer;
       }
     }
