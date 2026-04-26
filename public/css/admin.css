@@ -1,0 +1,76 @@
+.wrap { width: 100%; max-width: 680px; margin: 0 auto; }
+
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 1.5rem; gap: 12px; flex-wrap: wrap;
+}
+
+.badge-total {
+  background: #D62300; color: white; font-size: 13px; font-weight: 600;
+  padding: 5px 14px; border-radius: 99px; white-space: nowrap;
+}
+
+.planning { display: flex; flex-direction: column; gap: 8px; }
+
+.slot-row {
+  background: white; border: 1px solid #e5e5e5;
+  border-radius: 12px; overflow: hidden;
+}
+.slot-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid #f0f0f0;
+}
+.slot-time { font-size: 15px; font-weight: 600; }
+.slot-count {
+  font-size: 12px; font-weight: 600; padding: 3px 10px;
+  border-radius: 99px;
+}
+.count-ok { background: #eaf3de; color: #3B6D11; }
+.count-full { background: #fcebeb; color: #A32D2D; }
+.count-empty { background: #f0f0f0; color: #999; }
+
+.slot-body { padding: 10px 16px 14px; }
+
+.resa-list { display: flex; flex-direction: column; gap: 6px; }
+.resa-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; background: #f9f9f9; border-radius: 8px;
+}
+.resa-avatar {
+  width: 30px; height: 30px; border-radius: 50%; background: #D62300;
+  color: white; font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.resa-name { font-size: 14px; font-weight: 500; }
+.resa-time { font-size: 12px; color: #999; margin-left: auto; }
+
+.empty-slot {
+  font-size: 13px; color: #bbb; text-align: center; padding: 8px 0;
+}
+
+.btn-reset {
+  display: block; width: 100%; margin-top: 1.5rem;
+  padding: 12px; background: white; border: 1px solid #ddd;
+  border-radius: 10px; font-size: 14px; color: #A32D2D; cursor: pointer;
+  font-family: inherit; font-weight: 600; transition: background 0.15s;
+}
+.btn-reset:hover { background: #fcebeb; }
+
+.confirm-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.confirm-box {
+  background: white; border-radius: 14px; padding: 1.5rem;
+  max-width: 320px; width: 90%; text-align: center;
+}
+.confirm-box h3 { font-size: 17px; margin-bottom: 8px; }
+.confirm-box p { font-size: 14px; color: #666; margin-bottom: 1.25rem; }
+.confirm-actions { display: flex; gap: 8px; }
+.confirm-actions button {
+  flex: 1; padding: 11px; border-radius: 9px; font-size: 14px;
+  font-family: inherit; font-weight: 600; cursor: pointer; border: none;
+}
+.btn-cancel-c { background: #f0f0f0; color: #444; }
+.btn-danger { background: #D62300; color: white; }
