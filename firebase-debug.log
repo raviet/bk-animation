@@ -1,0 +1,46 @@
+[debug] [2026-04-26T18:53:57.291Z] ----------------------------------------------------------------------
+[debug] [2026-04-26T18:53:57.294Z] Command:       /opt/homebrew/Cellar/node/25.9.0_2/bin/node /opt/homebrew/bin/firebase serve
+[debug] [2026-04-26T18:53:57.294Z] CLI Version:   15.15.0
+[debug] [2026-04-26T18:53:57.294Z] Platform:      darwin
+[debug] [2026-04-26T18:53:57.294Z] Node Version:  v25.9.0
+[debug] [2026-04-26T18:53:57.294Z] Time:          Sun Apr 26 2026 20:53:57 GMT+0200 (Central European Summer Time)
+[debug] [2026-04-26T18:53:57.295Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-04-26T18:53:58.082Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-04-26T18:53:58.082Z] > authorizing via signed-in user (thibaudravier@gmail.com)
+[debug] [2026-04-26T18:53:58.082Z] [iam] checking project bkanimationemerainville for permissions ["firebase.projects.get"]
+[debug] [2026-04-26T18:53:58.083Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:58.083Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:58.083Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville:testIamPermissions [none]
+[debug] [2026-04-26T18:53:58.083Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville:testIamPermissions  x-goog-user-project=bkanimationemerainville
+[debug] [2026-04-26T18:53:58.083Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2026-04-26T18:53:58.716Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville:testIamPermissions 200
+[debug] [2026-04-26T18:53:58.716Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2026-04-26T18:53:58.717Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:58.717Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:58.717Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville [none]
+[debug] [2026-04-26T18:53:58.883Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville 200
+[debug] [2026-04-26T18:53:58.884Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/bkanimationemerainville {"projectNumber":"312167238846","projectId":"bkanimationemerainville","lifecycleState":"ACTIVE","name":"BkAnimationEmerainville","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2026-04-25T18:09:31.280Z"}
+[info] 
+[info] === Serving from '/Users/tibo/Projet/bk-animation'...
+[info] 
+[debug] [2026-04-26T18:53:58.887Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:58.887Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:58.888Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/bkanimationemerainville/sites 
+[debug] [2026-04-26T18:53:59.863Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/bkanimationemerainville/sites 200
+[debug] [2026-04-26T18:53:59.864Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/bkanimationemerainville/sites {"sites":[{"name":"projects/bkanimationemerainville/sites/bkanimationemerainville","defaultUrl":"https://bkanimationemerainville.web.app","appId":"1:312167238846:web:b79492e2092bb21866a2ef","type":"DEFAULT_SITE"}]}
+[debug] [2026-04-26T18:53:59.864Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:59.864Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:53:59.864Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/bkanimationemerainville/webApps/1:312167238846:web:b79492e2092bb21866a2ef/config [none]
+[debug] [2026-04-26T18:54:00.634Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/bkanimationemerainville/webApps/1:312167238846:web:b79492e2092bb21866a2ef/config 200
+[debug] [2026-04-26T18:54:00.634Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/bkanimationemerainville/webApps/1:312167238846:web:b79492e2092bb21866a2ef/config {"projectId":"bkanimationemerainville","appId":"1:312167238846:web:b79492e2092bb21866a2ef","storageBucket":"bkanimationemerainville.firebasestorage.app","apiKey":"AIzaSyBG377KlyGO543RYR5YZQY9necmjrUmEVE","authDomain":"bkanimationemerainville.firebaseapp.com","messagingSenderId":"312167238846","measurementId":"G-LTVLEH93FF","projectNumber":"312167238846","version":"2"}
+[debug] [2026-04-26T18:54:00.641Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:54:00.641Z] Checked if tokens are valid: true, expires at: 1777231518642
+[debug] [2026-04-26T18:54:00.642Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/bkanimationemerainville [none]
+[debug] [2026-04-26T18:54:00.856Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/bkanimationemerainville 200
+[debug] [2026-04-26T18:54:00.857Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/bkanimationemerainville {"projectId":"bkanimationemerainville","projectNumber":"312167238846","displayName":"BkAnimationEmerainville","name":"projects/bkanimationemerainville","resources":{"hostingSite":"bkanimationemerainville"},"state":"ACTIVE","etag":"1_06bac42c-b150-4438-a958-be6b2cc1a5a2"}
+[info] i  hosting[bkanimationemerainville]: Serving hosting files from: public {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mpublic\u001b[22m"}}
+[info] ✔  hosting[bkanimationemerainville]: Local server: http://localhost:5002 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://localhost:5002\u001b[22m\u001b[24m"}}
+[info] i  hosting: ::1 - - [26/Apr/2026:18:54:32 +0000] "GET /index.html HTTP/1.1" 200 - "http://localhost:5002/admin.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Safari/605.1.15" {"metadata":{"emulator":{"name":"hosting"},"message":"::1 - - [26/Apr/2026:18:54:32 +0000] \"GET /index.html HTTP/1.1\" 200 - \"http://localhost:5002/admin.html\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Safari/605.1.15\""}}
+[info] i  hosting: ::1 - - [26/Apr/2026:18:54:52 +0000] "GET /index.html HTTP/1.1" 200 - "http://localhost:5002/admin.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Safari/605.1.15" {"metadata":{"emulator":{"name":"hosting"},"message":"::1 - - [26/Apr/2026:18:54:52 +0000] \"GET /index.html HTTP/1.1\" 200 - \"http://localhost:5002/admin.html\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Safari/605.1.15\""}}
+[info] i  hosting: ::1 - - [26/Apr/2026:18:55:00 +0000] "GET /index.html HTTP/1.1" 200 - "http://localhost:5002/admin.html" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Safari/605.1.15" {"metadata":{"emulator":{"name":"hosting"},"message":"::1 - - [26/Apr/2026:18:55:00 +0000] \"GET /index.html HTTP/1.1\" 200 - \"http://localhost:5002/admin.html\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.3 Safari/605.1.15\""}}
