@@ -12,8 +12,8 @@ const firebaseConfig = {
 
 export const PLACES = 4;
 export const HORAIRES = [
-  "13h00 – 13h30","13h30 – 14h00","14h00 – 14h30","14h30 – 15h00",
-  "15h00 – 15h30","15h30 – 16h00","16h00 – 16h30","16h30 – 17h00"
+  "14h30 – 15h00", "15h00 – 15h30","15h30 – 16h00",
+  "16h00 – 16h30","16h30 – 17h00", "17h00 – 17h30"
 ];
 export const JOURS = ["Samedi","Dimanche"];
 export function slotId(jour, idx) { return `${jour}-${idx}`; }
