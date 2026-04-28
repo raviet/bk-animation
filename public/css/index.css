@@ -6,6 +6,17 @@
 
 /* ── Slots ── */
 .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem; }
+.days-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+.day-col {
+  background: white; border: 1px solid #e5e5e5;
+  border-radius: 14px; padding: 14px 10px;
+}
+.day-col-title {
+  font-size: 16px; font-weight: 700; color: #1a1a1a;
+  text-align: center; margin-bottom: 12px;
+  padding-bottom: 10px; border-bottom: 2px solid var(--bk-orange);
+}
+.slots-col { grid-template-columns: 1fr; margin-bottom: 0; }
 .slot {
   padding: 13px; border: 1px solid #e5e5e5;
   border-radius: 10px; background: white; cursor: pointer; transition: all 0.15s;

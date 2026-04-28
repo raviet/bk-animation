@@ -48,6 +48,7 @@
   flex-shrink: 0;
 }
 .resa-name { font-size: 14px; font-weight: 500; }
+.resa-enfants { font-size: 12px; color: var(--bk-red); font-weight: 600; }
 .resa-time { font-size: 12px; color: #999; margin-left: auto; }
 
 .empty-slot {

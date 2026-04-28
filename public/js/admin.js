@@ -4,20 +4,25 @@ import { PLACES, HORAIRES, JOURS, slotId, db, auth } from './config.js';
 
 const ADMINS = [
   "thibaudravier@gmail.com",
+  "mariemstoyan@gmail.com",
 ];
 
 let state = { jour: "Samedi", slots: {}, showResetConfirm: false };
 let unsubscribeFirestore = null;
+let pendingError = null;
 
 onAuthStateChanged(auth, user => {
   if (user && ADMINS.includes(user.email)) {
+    pendingError = null;
     startAdmin();
   } else if (user) {
+    pendingError = "Accès refusé. Ce compte n'est pas autorisé.";
     signOut(auth);
-    renderLogin("Accès refusé. Ce compte n'est pas autorisé.");
   } else {
     stopAdmin();
-    renderLogin();
+    const err = pendingError;
+    pendingError = null;
+    renderLogin(err);
   }
 });
 
@@ -129,20 +134,24 @@ function initials(prenom, nom) {
   return ((prenom?.[0] || "") + (nom?.[0] || "")).toUpperCase();
 }
 
-function totalResas() {
-  return Object.values(state.slots).reduce((sum, arr) => sum + (arr?.length || 0), 0);
+function countEnfants(resa) {
+  return (resa || []).reduce((s, r) => s + (r.nb_enfants || 1), 0);
+}
+
+function totalEnfants() {
+  return Object.values(state.slots).reduce((sum, arr) => sum + countEnfants(arr), 0);
 }
 
 function render() {
   renderLogoutBtn(true);
   const el = document.getElementById("app");
-  const total = totalResas();
-  document.getElementById("total-badge").textContent = `${total} réservation${total > 1 ? "s" : ""}`;
+  const total = totalEnfants();
+  document.getElementById("total-badge").textContent = `${total} enfant${total > 1 ? "s" : ""}`;
 
   const slotsHTML = HORAIRES.map((h, i) => {
     const id = slotId(state.jour, i);
     const resas = state.slots[id] || [];
-    const nb = resas.length;
+    const nb = countEnfants(resas);
     const countCls = nb === 0 ? "count-empty" : nb >= PLACES ? "count-full" : "count-ok";
     const countLabel = nb === 0 ? "Vide" : `${nb} / ${PLACES}`;
 
@@ -151,6 +160,7 @@ function render() {
         <div class="resa-item">
           <div class="resa-avatar">${initials(r.prenom, r.nom)}</div>
           <span class="resa-name">${r.prenom} ${r.nom}</span>
+          <span class="resa-enfants">${r.nb_enfants || 1} enfant${(r.nb_enfants || 1) > 1 ? "s" : ""}</span>
           <span class="resa-time">${r.ts ? formatTime(r.ts) : ""}</span>
         </div>`).join("")
       : `<div class="empty-slot">Aucune réservation</div>`;
