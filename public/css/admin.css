@@ -57,12 +57,21 @@
 .resa-name { font-size: 14px; }
 .resa-nom { text-transform: uppercase; font-weight: 700; }
 .resa-time { font-size: 11px; color: #aaa; margin-top: 2px; }
-.btn-supprimer {
-  margin-top: 5px; padding: 3px 10px; font-size: 11px; font-family: inherit;
-  color: #A32D2D; background: #fcebeb; border: 1px solid #f0c0c0;
-  border-radius: 6px; cursor: pointer; transition: background 0.15s;
+.resa-actions { display: flex; gap: 6px; margin-top: 6px; }
+.btn-supprimer, .btn-modifier {
+  padding: 3px 10px; font-size: 11px; font-family: inherit;
+  border-radius: 6px; cursor: pointer; transition: background 0.15s; border: 1px solid;
 }
+.btn-supprimer { color: #A32D2D; background: #fcebeb; border-color: #f0c0c0; }
 .btn-supprimer:hover { background: #f5d5d5; }
+.btn-modifier { color: #7A4800; background: var(--bk-orange-lt); border-color: #e8c87a; }
+.btn-modifier:hover { background: #fbe8b0; }
+.btn-confirm-mod {
+  padding: 9px 18px; background: var(--bk-orange); color: #1a1a1a;
+  border: none; border-radius: 8px; font-size: 14px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+}
+.btn-confirm-mod:hover { opacity: 0.9; }
 .resa-avatar {
   display: flex; flex-direction: column; align-items: center;
   background: var(--bk-red); color: white; border-radius: 10px;

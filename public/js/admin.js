@@ -124,6 +124,58 @@ async function supprimerResa(id, ts) {
   await updateDoc(ref, { [id]: resas });
 }
 
+async function modifierResa(id, ts, prenom, nom, nb_enfants) {
+  const ref = doc(db, "semaine", "courante");
+  const resas = (state.slots[id] || []).map(r =>
+    r.ts === ts ? { ...r, prenom, nom, nb_enfants } : r
+  );
+  await updateDoc(ref, { [id]: resas });
+}
+
+function showModifierModal(id, ts, r) {
+  const autresEnfants = (state.slots[id] || [])
+    .filter(x => x.ts !== ts)
+    .reduce((s, x) => s + (x.nb_enfants || 1), 0);
+  const maxEnfants = PLACES - autresEnfants;
+
+  const overlay = document.createElement("div");
+  overlay.className = "confirm-overlay";
+  overlay.id = "modifier-overlay";
+  overlay.innerHTML = `
+    <div class="confirm-box">
+      <h3>Modifier la réservation</h3>
+      <div class="form-row" style="margin-top:12px">
+        <label class="form-label">Prénom</label>
+        <input class="form-input" id="mod-prenom" type="text" value="${r.prenom}" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Nom</label>
+        <input class="form-input" id="mod-nom" type="text" value="${r.nom}" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Nombre d'enfants (max ${maxEnfants})</label>
+        <input class="form-input" id="mod-enfants" type="number" min="1" max="${maxEnfants}" value="${Math.min(r.nb_enfants || 1, maxEnfants)}" />
+      </div>
+      <div class="confirm-actions" style="margin-top:16px">
+        <button class="btn-cancel-c" id="mod-cancel">Annuler</button>
+        <button class="btn-confirm-mod" id="mod-save">Enregistrer</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  overlay.querySelector("#mod-cancel").onclick = () => overlay.remove();
+  overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
+  overlay.querySelector("#mod-save").onclick = async () => {
+    const prenom = overlay.querySelector("#mod-prenom").value.trim();
+    const nom = overlay.querySelector("#mod-nom").value.trim();
+    const nb_enfants = Math.min(Math.max(parseInt(overlay.querySelector("#mod-enfants").value) || 1, 1), maxEnfants);
+    if (!prenom || !nom) return;
+    overlay.remove();
+    await modifierResa(id, ts, prenom, nom, nb_enfants);
+  };
+}
+
 async function resetAll() {
   const ref = doc(db, "semaine", "courante");
   await setDoc(ref, {});
@@ -167,7 +219,10 @@ function renderDayPlanning(jour) {
           <div class="resa-info">
             <span class="resa-name">${r.prenom} <span class="resa-nom">${r.nom}</span></span>
             <span class="resa-time">${r.ts ? "Réservé le " + formatTime(r.ts) : ""}</span>
-            <button class="btn-supprimer" data-id="${id}" data-ts="${r.ts}">Supprimer</button>
+            <div class="resa-actions">
+              <button class="btn-modifier" data-id="${id}" data-ts="${r.ts}">Modifier</button>
+              <button class="btn-supprimer" data-id="${id}" data-ts="${r.ts}">Supprimer</button>
+            </div>
           </div>
           <div class="resa-avatar">
             <span class="avatar-count">${r.nb_enfants || 1}</span>
@@ -220,6 +275,14 @@ function render() {
     ${confirmHTML}
   `;
 
+  el.querySelectorAll(".btn-modifier").forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.id;
+      const ts = Number(btn.dataset.ts);
+      const r = (state.slots[id] || []).find(r => r.ts === ts);
+      if (r) showModifierModal(id, ts, r);
+    };
+  });
   el.querySelectorAll(".btn-supprimer").forEach(btn => {
     btn.onclick = () => supprimerResa(btn.dataset.id, Number(btn.dataset.ts));
   });
