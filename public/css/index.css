@@ -1,25 +1,31 @@
-body { display: flex; justify-content: center; }
-.wrap { width: 100%; max-width: 480px; }
-.logo { margin-bottom: 1.5rem; }
-.nav-link { margin-left: auto; }
+.wrap { width: 100%; max-width: 480px; margin: 0 auto; padding: 1.25rem 1rem 2rem; flex: 1; }
 
+.page-intro { margin-bottom: 1.5rem; }
+.page-intro h1 { font-size: 20px; font-weight: 700; color: #1a1a1a; }
+.page-intro p  { font-size: 13px; color: #888; margin-top: 3px; }
+
+/* ── Slots ── */
 .slots { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.5rem; }
 .slot {
   padding: 13px; border: 1px solid #e5e5e5;
   border-radius: 10px; background: white; cursor: pointer; transition: all 0.15s;
 }
 .slot:hover:not(.full):not(.selected) { border-color: #ccc; background: #fafafa; }
-.slot.selected { border-color: #D62300; background: #fff5f5; }
+.slot.selected {
+  border-color: var(--bk-orange); background: var(--bk-orange-lt);
+  box-shadow: 0 0 0 2px rgba(232,160,32,0.2);
+}
 .slot.full { opacity: 0.5; cursor: not-allowed; }
 .slot-time { font-size: 14px; font-weight: 600; color: #1a1a1a; }
 .slot-badge {
   display: inline-block; font-size: 11px;
   padding: 2px 8px; border-radius: 99px; margin-top: 6px;
 }
-.badge-ok { background: #eaf3de; color: #3B6D11; }
+.badge-ok   { background: var(--bk-orange); color: #fff; }
 .badge-full { background: #fcebeb; color: #A32D2D; }
-.badge-sel { background: #fff0ee; color: #D62300; }
+.badge-sel  { background: var(--bk-orange-lt); color: #7A4800; }
 
+/* ── Form ── */
 .form-card {
   background: white; border: 1px solid #e5e5e5;
   border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
@@ -32,32 +38,19 @@ body { display: flex; justify-content: center; }
   border-radius: 8px; font-size: 15px; background: white;
   color: #1a1a1a; font-family: inherit; transition: border-color 0.15s;
 }
-.form-input:focus { outline: none; border-color: #D62300; box-shadow: 0 0 0 3px rgba(214,35,0,0.08); }
+.form-input:focus { outline: none; border-color: var(--bk-red); box-shadow: 0 0 0 3px rgba(214,35,0,0.08); }
 
+/* ── Buttons ── */
 .btn-confirm {
-  width: 100%; padding: 14px; background: #D62300; color: white;
-  border: none; border-radius: 10px; font-size: 15px; font-weight: 600;
-  cursor: pointer; transition: opacity 0.15s; font-family: inherit;
+  width: 100%; padding: 14px;
+  background: var(--bk-orange);
+  color: #1a1a1a; border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: opacity 0.15s; font-family: inherit;
+  letter-spacing: 0.02em;
 }
-.btn-confirm:hover { opacity: 0.88; }
+.btn-confirm:hover { opacity: 0.9; }
 .btn-confirm:disabled { opacity: 0.35; cursor: not-allowed; }
-
-.success { text-align: center; padding: 2rem 0.5rem; }
-.success-icon {
-  width: 68px; height: 68px; border-radius: 50%; background: #eaf3de;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 1.25rem; font-size: 30px;
-}
-.success h2 { font-size: 21px; font-weight: 600; margin-bottom: 6px; }
-.success p { font-size: 14px; color: #666; line-height: 1.6; }
-
-.recap {
-  background: #f5f5f5; border-radius: 10px;
-  padding: 1rem 1.25rem; margin: 1.25rem 0; text-align: left;
-}
-.recap-row { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
-.recap-label { color: #666; }
-.recap-value { font-weight: 600; color: #1a1a1a; }
 
 .btn-back {
   width: 100%; padding: 11px; background: white; border: 1px solid #ddd;
@@ -65,3 +58,22 @@ body { display: flex; justify-content: center; }
   margin-top: 10px; font-family: inherit; transition: background 0.15s;
 }
 .btn-back:hover { background: #f5f5f5; }
+
+/* ── Success ── */
+.success { text-align: center; padding: 2rem 0.5rem; }
+.success-icon {
+  width: 68px; height: 68px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--bk-yellow) 0%, #e8920a 100%);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.25rem; font-size: 30px; color: white;
+}
+.success h2 { font-size: 21px; font-weight: 700; margin-bottom: 6px; }
+.success p  { font-size: 14px; color: #666; line-height: 1.6; }
+
+.recap {
+  background: var(--bk-orange-lt); border: 1px solid #e8c87a;
+  border-radius: 10px; padding: 1rem 1.25rem; margin: 1.25rem 0; text-align: left;
+}
+.recap-row  { display: flex; justify-content: space-between; font-size: 14px; padding: 4px 0; }
+.recap-label { color: #888; }
+.recap-value { font-weight: 600; color: #1a1a1a; }

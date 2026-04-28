@@ -8,25 +8,44 @@
   <link rel="stylesheet" href="css/admin.css" />
 </head>
 <body>
-  <div class="wrap">
-    <div class="header">
-      <div class="logo">
-        <div class="logo-icon">BK</div>
-        <div>
-          <h1>Planning réservations</h1>
-          <p>Burger King Émerainville</p>
+
+  <header class="bk-header">
+    <div class="header-inner">
+      <div class="bk-brand">
+        <img class="bk-logo-img" src="img/bk-logo.png" alt="Burger King" />
+        <div class="bk-brand-text">
+          <span class="bk-name">Burger King</span>
+          <span class="bk-location">Émerainville</span>
         </div>
       </div>
       <a class="nav-link" href="index.html">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Réserver
       </a>
-      <div class="badge-total" id="total-badge">…</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="page-intro">
+      <div class="page-intro-row">
+        <h1>Planning réservations</h1>
+        <div class="badge-total" id="total-badge">…</div>
+      </div>
+      <p>Samedi &amp; dimanche après-midi</p>
     </div>
     <div id="app">
       <div class="loader"><div class="spinner"></div>Chargement...</div>
     </div>
-  </div>
+  </main>
+
+  <footer class="bk-footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Burger King Émerainville</span>
+      <span class="footer-sep">·</span>
+      <span class="footer-sub">Administration</span>
+    </div>
+  </footer>
+
   <script type="module" src="js/admin.js"></script>
 </body>
 </html>
