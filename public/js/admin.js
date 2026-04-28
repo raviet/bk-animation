@@ -1,4 +1,4 @@
-import { doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { doc, onSnapshot, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { PLACES, HORAIRES, JOURS, slotId, db, auth } from './config.js';
 
@@ -7,7 +7,7 @@ const ADMINS = [
   "mariemstoyan@gmail.com",
 ];
 
-let state = { jour: "Samedi", slots: {}, showResetConfirm: false };
+let state = { slots: {}, showResetConfirm: false };
 let unsubscribeFirestore = null;
 let pendingError = null;
 
@@ -118,6 +118,12 @@ function renderLogoutBtn(show) {
   header.appendChild(btn);
 }
 
+async function supprimerResa(id, ts) {
+  const ref = doc(db, "semaine", "courante");
+  const resas = (state.slots[id] || []).filter(r => r.ts !== ts);
+  await updateDoc(ref, { [id]: resas });
+}
+
 async function resetAll() {
   const ref = doc(db, "semaine", "courante");
   await setDoc(ref, {});
@@ -127,7 +133,7 @@ async function resetAll() {
 
 function formatTime(ts) {
   const d = new Date(ts);
-  return d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleString("fr-FR", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
 }
 
 function initials(prenom, nom) {
@@ -142,26 +148,31 @@ function totalEnfants() {
   return Object.values(state.slots).reduce((sum, arr) => sum + countEnfants(arr), 0);
 }
 
-function render() {
-  renderLogoutBtn(true);
-  const el = document.getElementById("app");
-  const total = totalEnfants();
-  document.getElementById("total-badge").textContent = `${total} enfant${total > 1 ? "s" : ""}`;
-
-  const slotsHTML = HORAIRES.map((h, i) => {
-    const id = slotId(state.jour, i);
+function renderDayPlanning(jour) {
+  return HORAIRES.map((h, i) => {
+    const id = slotId(jour, i);
     const resas = state.slots[id] || [];
     const nb = countEnfants(resas);
-    const countCls = nb === 0 ? "count-empty" : nb >= PLACES ? "count-full" : "count-ok";
-    const countLabel = nb === 0 ? "Vide" : `${nb} / ${PLACES}`;
+    const dispo = PLACES - nb;
+    const countCls = "";
+    const countLabel = nb === 0
+      ? `<span class="count-pill count-empty">Vide</span>`
+      : nb >= PLACES
+        ? `<span class="count-pill count-full">Complet</span>`
+        : `<span class="count-pill count-ok">${dispo} / ${PLACES}</span><span class="slot-count-sep">–</span><span class="count-pill count-full">${nb} / ${PLACES}</span>`;
 
     const resaItems = resas.length > 0
       ? resas.map(r => `
         <div class="resa-item">
-          <div class="resa-avatar">${initials(r.prenom, r.nom)}</div>
-          <span class="resa-name">${r.prenom} ${r.nom}</span>
-          <span class="resa-enfants">${r.nb_enfants || 1} enfant${(r.nb_enfants || 1) > 1 ? "s" : ""}</span>
-          <span class="resa-time">${r.ts ? formatTime(r.ts) : ""}</span>
+          <div class="resa-info">
+            <span class="resa-name">${r.prenom} <span class="resa-nom">${r.nom}</span></span>
+            <span class="resa-time">${r.ts ? "Réservé le " + formatTime(r.ts) : ""}</span>
+            <button class="btn-supprimer" data-id="${id}" data-ts="${r.ts}">Supprimer</button>
+          </div>
+          <div class="resa-avatar">
+            <span class="avatar-count">${r.nb_enfants || 1}</span>
+            <span class="avatar-label">enfant${(r.nb_enfants || 1) > 1 ? "s" : ""}</span>
+          </div>
         </div>`).join("")
       : `<div class="empty-slot">Aucune réservation</div>`;
 
@@ -176,6 +187,13 @@ function render() {
         </div>
       </div>`;
   }).join("");
+}
+
+function render() {
+  renderLogoutBtn(true);
+  const el = document.getElementById("app");
+  const total = totalEnfants();
+  document.getElementById("total-badge").textContent = `${total} enfant${total > 1 ? "s" : ""}`;
 
   const confirmHTML = state.showResetConfirm ? `
     <div class="confirm-overlay" id="overlay">
@@ -190,17 +208,20 @@ function render() {
     </div>` : "";
 
   el.innerHTML = `
-    <div class="day-tabs">
-      ${JOURS.map(j => `<div class="day-tab${state.jour===j?' active':''}" data-jour="${j}">${j}</div>`).join("")}
+    <div class="admin-days-grid">
+      ${JOURS.map(j => `
+        <div class="admin-day-col">
+          <div class="day-col-title">${j}</div>
+          <div class="planning">${renderDayPlanning(j)}</div>
+        </div>
+      `).join("")}
     </div>
-    <p class="section-title">Créneaux – ${state.jour}</p>
-    <div class="planning">${slotsHTML}</div>
     <button class="btn-reset" id="btn-reset">Remettre à zéro toutes les réservations</button>
     ${confirmHTML}
   `;
 
-  el.querySelectorAll(".day-tab").forEach(t => {
-    t.onclick = () => { state.jour = t.dataset.jour; render(); };
+  el.querySelectorAll(".btn-supprimer").forEach(btn => {
+    btn.onclick = () => supprimerResa(btn.dataset.id, Number(btn.dataset.ts));
   });
 
   document.getElementById("btn-reset").onclick = () => {

@@ -17,6 +17,14 @@
 
 .planning { display: flex; flex-direction: column; gap: 8px; }
 
+.admin-days-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+.admin-day-col { min-width: 0; }
+.admin-day-col .day-col-title {
+  font-size: 16px; font-weight: 700; color: #1a1a1a;
+  text-align: center; margin-bottom: 12px;
+  padding-bottom: 10px; border-bottom: 2px solid var(--bk-orange);
+}
+
 .slot-row {
   background: white; border: 1px solid #e5e5e5;
   border-radius: 12px; overflow: hidden;
@@ -26,7 +34,9 @@
   padding: 12px 16px; border-bottom: 1px solid #f0f0f0;
 }
 .slot-time { font-size: 15px; font-weight: 600; }
-.slot-count {
+.slot-count { display: flex; align-items: center; gap: 6px; }
+.slot-count-sep { font-size: 12px; color: #ccc; font-weight: 400; }
+.count-pill {
   font-size: 12px; font-weight: 600; padding: 3px 10px;
   border-radius: 99px;
 }
@@ -36,20 +46,30 @@
 
 .slot-body { padding: 10px 16px 14px; }
 
-.resa-list { display: flex; flex-direction: column; gap: 6px; }
+.resa-list { display: flex; flex-direction: column; gap: 8px; }
 .resa-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 12px; background: #f9f9f9; border-radius: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: white;
+  border: 1px solid #eee; border-radius: 10px;
+  border-left: 4px solid var(--bk-orange);
 }
+.resa-info { display: flex; flex-direction: column; gap: 2px; }
+.resa-name { font-size: 14px; }
+.resa-nom { text-transform: uppercase; font-weight: 700; }
+.resa-time { font-size: 11px; color: #aaa; margin-top: 2px; }
+.btn-supprimer {
+  margin-top: 5px; padding: 3px 10px; font-size: 11px; font-family: inherit;
+  color: #A32D2D; background: #fcebeb; border: 1px solid #f0c0c0;
+  border-radius: 6px; cursor: pointer; transition: background 0.15s;
+}
+.btn-supprimer:hover { background: #f5d5d5; }
 .resa-avatar {
-  width: 30px; height: 30px; border-radius: 50%; background: #D62300;
-  color: white; font-size: 12px; font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--bk-red); color: white; border-radius: 10px;
+  padding: 6px 10px; min-width: 48px; flex-shrink: 0;
 }
-.resa-name { font-size: 14px; font-weight: 500; }
-.resa-enfants { font-size: 12px; color: var(--bk-red); font-weight: 600; }
-.resa-time { font-size: 12px; color: #999; margin-left: auto; }
+.avatar-count { font-size: 18px; font-weight: 700; line-height: 1; }
+.avatar-label { font-size: 9px; font-weight: 500; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.04em; }
 
 .empty-slot {
   font-size: 13px; color: #bbb; text-align: center; padding: 8px 0;
