@@ -1,16 +1,124 @@
 import { doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import { PLACES, HORAIRES, JOURS, slotId, db } from './config.js';
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { PLACES, HORAIRES, JOURS, slotId, db, auth } from './config.js';
+
+const ADMINS = [
+  "thibaudravier@gmail.com",
+];
 
 let state = { jour: "Samedi", slots: {}, showResetConfirm: false };
+let unsubscribeFirestore = null;
 
-const ref = doc(db, "semaine", "courante");
-onSnapshot(ref, snap => {
-  state.slots = snap.exists() ? (snap.data() || {}) : {};
-  render();
-}, err => {
-  document.getElementById("app").innerHTML =
-    `<div class="error-msg">Erreur de connexion : ${err.message}</div>`;
+onAuthStateChanged(auth, user => {
+  if (user && ADMINS.includes(user.email)) {
+    startAdmin();
+  } else if (user) {
+    signOut(auth);
+    renderLogin("Accès refusé. Ce compte n'est pas autorisé.");
+  } else {
+    stopAdmin();
+    renderLogin();
+  }
 });
+
+function startAdmin() {
+  const ref = doc(db, "semaine", "courante");
+  unsubscribeFirestore = onSnapshot(ref, snap => {
+    state.slots = snap.exists() ? (snap.data() || {}) : {};
+    render();
+  }, err => {
+    document.getElementById("app").innerHTML =
+      `<div class="error-msg">Erreur de connexion : ${err.message}</div>`;
+  });
+}
+
+function stopAdmin() {
+  if (unsubscribeFirestore) {
+    unsubscribeFirestore();
+    unsubscribeFirestore = null;
+  }
+}
+
+function renderLogin(errorMsg = null) {
+  const badge = document.getElementById("total-badge");
+  if (badge) badge.textContent = "";
+  renderLogoutBtn(false);
+
+  document.getElementById("app").innerHTML = `
+    <div class="login-card">
+      <h2 class="login-title">Connexion administrateur</h2>
+      <button class="btn-google" id="btn-google">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Se connecter avec Google
+      </button>
+      <div class="login-divider"><span>ou</span></div>
+      <div class="form-row">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="login-email" type="email" placeholder="email@exemple.com" autocomplete="email" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Mot de passe</label>
+        <input class="form-input" id="login-password" type="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <div id="login-error" class="login-error"${errorMsg ? '' : ' style="display:none"'}>${errorMsg || ''}</div>
+      <button class="btn-confirm" id="btn-login">Se connecter</button>
+    </div>
+  `;
+
+  document.getElementById("btn-google").onclick = async () => {
+    const errEl = document.getElementById("login-error");
+    errEl.style.display = "none";
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    } catch(e) {
+      if (e.code !== 'auth/popup-closed-by-user') {
+        errEl.textContent = "Erreur de connexion Google.";
+        errEl.style.display = "block";
+      }
+    }
+  };
+
+  const btn = document.getElementById("btn-login");
+  const errEl = document.getElementById("login-error");
+
+  const attempt = async () => {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    btn.disabled = true;
+    errEl.style.display = "none";
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch {
+      errEl.textContent = "Email ou mot de passe incorrect.";
+      errEl.style.display = "block";
+      btn.disabled = false;
+    }
+  };
+
+  btn.onclick = attempt;
+  document.getElementById("login-password").onkeydown = e => { if (e.key === "Enter") attempt(); };
+}
+
+function renderLogoutBtn(show) {
+  const header = document.querySelector(".header-inner");
+  const existing = document.getElementById("btn-logout");
+  if (existing) existing.remove();
+  if (!show) return;
+
+  const btn = document.createElement("button");
+  btn.id = "btn-logout";
+  btn.className = "btn-logout";
+  btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Déconnexion`;
+  btn.onclick = () => signOut(auth);
+  header.appendChild(btn);
+}
+
+async function resetAll() {
+  const ref = doc(db, "semaine", "courante");
+  await setDoc(ref, {});
+  state.showResetConfirm = false;
+  render();
+}
 
 function formatTime(ts) {
   const d = new Date(ts);
@@ -25,13 +133,8 @@ function totalResas() {
   return Object.values(state.slots).reduce((sum, arr) => sum + (arr?.length || 0), 0);
 }
 
-async function resetAll() {
-  await setDoc(ref, {});
-  state.showResetConfirm = false;
-  render();
-}
-
 function render() {
+  renderLogoutBtn(true);
   const el = document.getElementById("app");
   const total = totalResas();
   document.getElementById("total-badge").textContent = `${total} réservation${total > 1 ? "s" : ""}`;
@@ -77,7 +180,6 @@ function render() {
     </div>` : "";
 
   el.innerHTML = `
-    <p class="section-title">Choisissez un jour</p>
     <div class="day-tabs">
       ${JOURS.map(j => `<div class="day-tab${state.jour===j?' active':''}" data-jour="${j}">${j}</div>`).join("")}
     </div>
