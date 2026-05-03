@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, connectFirestoreEmulator } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, connectAuthEmulator } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBG377KlyGO543RYR5YZQY9necmjrUmEVE",
@@ -22,3 +22,9 @@ export function slotId(jour, idx) { return `${jour}-${idx}`; }
 const fbApp = initializeApp(firebaseConfig);
 export const db = getFirestore(fbApp);
 export const auth = getAuth(fbApp);
+export const IS_DEV = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+if (IS_DEV) {
+  connectFirestoreEmulator(db, "localhost", 8080);
+  connectAuthEmulator(auth, "http://localhost:9099");
+}

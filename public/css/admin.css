@@ -18,6 +18,15 @@
 .planning { display: flex; flex-direction: column; gap: 8px; }
 
 .admin-days-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+
+@media (max-width: 640px) {
+  .admin-days-grid { grid-template-columns: 1fr; }
+  .wrap { padding: 1rem 0.75rem 2rem; }
+  .slot-header { flex-wrap: wrap; gap: 6px; }
+  .resa-item { align-items: flex-start; }
+  .resa-avatar { flex-shrink: 0; }
+  .resa-info { min-width: 0; flex: 1; }
+}
 .admin-day-col { min-width: 0; }
 .admin-day-col .day-col-title {
   font-size: 16px; font-weight: 700; color: #1a1a1a;
@@ -53,7 +62,7 @@
   border: 1px solid #eee; border-radius: 10px;
   border-left: 4px solid var(--bk-orange);
 }
-.resa-info { display: flex; flex-direction: column; gap: 2px; }
+.resa-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; overflow: hidden; }
 .resa-name { font-size: 14px; }
 .resa-nom { text-transform: uppercase; font-weight: 700; }
 .resa-time { font-size: 11px; color: #aaa; margin-top: 2px; }

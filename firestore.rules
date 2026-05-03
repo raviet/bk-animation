@@ -2,7 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /semaine/{doc} {
-      allow read, write: if true;
+      // Lecture libre — clients voient les dispos
+      allow read: if true;
+      // Création/mise à jour — clients réservent (transaction anti-doublon côté client)
+      // Pas de delete direct — passe par Cloud Function admin
+      allow create, update: if true;
+      allow delete: if false;
     }
     match /{document=**} {
       allow read, write: if false;
