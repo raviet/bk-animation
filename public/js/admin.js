@@ -1,6 +1,12 @@
-import { doc, onSnapshot, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { doc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { PLACES, HORAIRES, JOURS, slotId, db, auth } from './config.js';
+import { getFunctions, httpsCallable, connectFunctionsEmulator } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-functions.js';
+import { PLACES, HORAIRES, JOURS, slotId, db, auth, IS_DEV } from './config.js';
+
+const functions = getFunctions();
+if (IS_DEV) connectFunctionsEmulator(functions, "localhost", 5001);
+const fnSupprimerResa = httpsCallable(functions, 'supprimerResa');
+const fnResetAll = httpsCallable(functions, 'resetAll');
 
 const ADMINS = [
   "thibaudravier@gmail.com",
@@ -119,17 +125,12 @@ function renderLogoutBtn(show) {
 }
 
 async function supprimerResa(id, ts) {
-  const ref = doc(db, "semaine", "courante");
-  const resas = (state.slots[id] || []).filter(r => r.ts !== ts);
-  await updateDoc(ref, { [id]: resas });
+  await fnSupprimerResa({ id, ts });
 }
 
 async function modifierResa(id, ts, prenom, nom, nb_enfants) {
-  const ref = doc(db, "semaine", "courante");
-  const resas = (state.slots[id] || []).map(r =>
-    r.ts === ts ? { ...r, prenom, nom, nb_enfants } : r
-  );
-  await updateDoc(ref, { [id]: resas });
+  const fnModifierResa = httpsCallable(functions, 'modifierResa');
+  await fnModifierResa({ id, ts, prenom, nom, nb_enfants });
 }
 
 function showModifierModal(id, ts, r) {
@@ -177,8 +178,7 @@ function showModifierModal(id, ts, r) {
 }
 
 async function resetAll() {
-  const ref = doc(db, "semaine", "courante");
-  await setDoc(ref, {});
+  await fnResetAll();
   state.showResetConfirm = false;
   render();
 }
